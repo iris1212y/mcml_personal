@@ -1,0 +1,6 @@
+conv/convert_outputs/
+conv/mcml_outputs/
+conv/sample.mco
+inputs/
+outputs/
+sample.mci
