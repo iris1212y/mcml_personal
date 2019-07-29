@@ -132,7 +132,7 @@ GetIsoValues(float Z_Min, float Z_Max)
     return (NULL);
 
   /* get the elements for the node. */
-  sscanf(in_str, "%lf", &head->iso_val);
+  sscanf(in_str, "%f", &head->iso_val);
   if (head->iso_val < Z_Min)
     head->iso_val = Z_Min;
   else if (head->iso_val > Z_Max)
@@ -508,7 +508,7 @@ IsoPlot(float **Z,		/* the 2D array Z[i][j]. */
   if (isofile == NULL)
     return;
 
-  printf("The range of the value is %lf to %lf.\n", zmin, zmax);
+  printf("The range of the value is %f to %f.\n", zmin, zmax);
   isos = GetIsoValues(zmin, zmax);
 
   GetIsoLines(isos, Z, IXmax, IYmax, Dx, Dy, pmax);

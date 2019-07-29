@@ -269,7 +269,7 @@ void ReadDzDr(FILE *File_Ptr, InputStruct *In_Ptr)
   /** read in dz, dr. **/
   strcpy(buf, FindDataLine(File_Ptr));
   if(buf[0]=='\0') nrerror("Reading dz, dr.\n");
-  sscanf(buf, "%lf%lf", &In_Ptr->dz, &In_Ptr->dr);
+  sscanf(buf, "%f%f", &In_Ptr->dz, &In_Ptr->dr);
   if(In_Ptr->dz<=0) nrerror("Nonpositive dz.\n");
   if(In_Ptr->dr<=0) nrerror("Nonpositive dr.\n");
 }
@@ -331,7 +331,7 @@ void ReadAmbient(FILE *File_Ptr,
 	nrerror(msg);
   }
 
-  sscanf(buf, "%lf", &n );
+  sscanf(buf, "%f", &n );
   if(n<=0) nrerror("Wrong n.\n");
   Layer_Ptr->n = n;
 }
@@ -357,7 +357,7 @@ Boolean ReadOneLayer(FILE *File_Ptr,
   strcpy(buf, FindDataLine(File_Ptr));
   if(buf[0]=='\0') return(1);	/* error. */
 
-  sscanf(buf, "%lf%lf%lf%lf%lf", &n, &mua, &mus, &g, &d);
+  sscanf(buf, "%f%f%f%f%f", &n, &mua, &mus, &g, &d);
   if(d<0 || n<=0 || mua<0 || mus<0 || g<0 || g>1) 
     return(1);			/* error. */
     
