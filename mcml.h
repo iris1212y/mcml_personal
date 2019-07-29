@@ -85,14 +85,14 @@
  *	Structure used to describe a photon packet.
  ****/
 typedef struct {
-  double x, y ,z;	/* Cartesian coordinates.[cm] */
-  double ux, uy, uz;/* directional cosines of a photon. */
-  double w;			/* weight. */
+  float x, y ,z;	/* Cartesian coordinates.[cm] */
+  float ux, uy, uz;/* directional cosines of a photon. */
+  float w;			/* weight. */
   Boolean dead;		/* 1 if photon is terminated. */
   short layer;		/* index to layer where the photon */
 					/* packet resides. */
-  double s;			/* current step size. [cm]. */
-  double sleft;		/* step size left. dimensionless [-]. */
+  float s;			/* current step size. [cm]. */
+  float sleft;		/* step size left. dimensionless [-]. */
 } PhotonStruct;
 
 /****
@@ -109,13 +109,13 @@ typedef struct {
  *	They are used for computation speed.
  ****/
 typedef struct {
-  double z0, z1;	/* z coordinates of a layer. [cm] */
-  double n;			/* refractive index of a layer. */
-  double mua;	    /* absorption coefficient. [1/cm] */
-  double mus;	    /* scattering coefficient. [1/cm] */
-  double g;		    /* anisotropy. */
+  float z0, z1;	/* z coordinates of a layer. [cm] */
+  float n;			/* refractive index of a layer. */
+  float mua;	    /* absorption coefficient. [1/cm] */
+  float mus;	    /* scattering coefficient. [1/cm] */
+  float g;		    /* anisotropy. */
   
-  double cos_crit0,	cos_crit1;	
+  float cos_crit0,	cos_crit1;	
 } LayerStruct;
 
 /****
@@ -143,12 +143,12 @@ typedef struct {
 							/* 'A' for ASCII, */
 							/* 'B' for binary. */
   long	 num_photons; 		/* to be traced. */
-  double Wth; 				/* play roulette if photon */
+  float Wth; 				/* play roulette if photon */
 							/* weight < Wth.*/
   
-  double dz;				/* z grid separation.[cm] */ 
-  double dr;				/* r grid separation.[cm] */
-  double da;				/* alpha grid separation. */
+  float dz;				/* z grid separation.[cm] */ 
+  float dr;				/* r grid separation.[cm] */
+  float da;				/* alpha grid separation. */
 							/* [radian] */
   short nz;					/* array range 0..nz-1. */
   short nr;					/* array range 0..nr-1. */
@@ -168,30 +168,30 @@ typedef struct {
  *	See manual for the physcial quantities.
  ****/
 typedef struct {
-  double    Rsp;	/* specular reflectance. [-] */
-  double ** Rd_ra;	/* 2D distribution of diffuse */
+  float    Rsp;	/* specular reflectance. [-] */
+  float ** Rd_ra;	/* 2D distribution of diffuse */
 					/* reflectance. [1/(cm2 sr)] */
-  double *  Rd_r;	/* 1D radial distribution of diffuse */
+  float *  Rd_r;	/* 1D radial distribution of diffuse */
 					/* reflectance. [1/cm2] */
-  double *  Rd_a;	/* 1D angular distribution of diffuse */
+  float *  Rd_a;	/* 1D angular distribution of diffuse */
 					/* reflectance. [1/sr] */
-  double    Rd;		/* total diffuse reflectance. [-] */
+  float    Rd;		/* total diffuse reflectance. [-] */
   
-  double ** A_rz;	/* 2D probability density in turbid */
+  float ** A_rz;	/* 2D probability density in turbid */
 					/* media over r & z. [1/cm3] */
-  double *  A_z;	/* 1D probability density over z. */
+  float *  A_z;	/* 1D probability density over z. */
 					/* [1/cm] */
-  double *  A_l;	/* each layer's absorption */
+  float *  A_l;	/* each layer's absorption */
 					/* probability. [-] */
-  double    A;		/* total absorption probability. [-] */
+  float    A;		/* total absorption probability. [-] */
   
-  double ** Tt_ra;	/* 2D distribution of total */
+  float ** Tt_ra;	/* 2D distribution of total */
 					/* transmittance. [1/(cm2 sr)] */
-  double *  Tt_r;	/* 1D radial distribution of */
+  float *  Tt_r;	/* 1D radial distribution of */
 					/* transmittance. [1/cm2] */
-  double *  Tt_a;	/* 1D angular distribution of */
+  float *  Tt_a;	/* 1D angular distribution of */
 					/* transmittance. [1/sr] */
-  double    Tt;		/* total transmittance. [-] */
+  float    Tt;		/* total transmittance. [-] */
 } OutStruct;
 
 /***********************************************************
@@ -199,8 +199,8 @@ typedef struct {
  *	release of arrays and matrices.
  *	Modified from Numerical Recipes in C.
  ****/
-double  *AllocVector(short, short);
-double **AllocMatrix(short, short,short, short);
-void 	 FreeVector(double *, short, short);
-void 	 FreeMatrix(double **, short, short, short, short);
+float  *AllocVector(short, short);
+float **AllocMatrix(short, short,short, short);
+void 	 FreeVector(float *, short, short);
+void 	 FreeMatrix(float **, short, short, short, short);
 void 	 nrerror(char *);

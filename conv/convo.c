@@ -122,7 +122,7 @@ IzToLayer(short Iz,
 {
   short       i = 1;		/* index to layer. */
   short       num_layers = In_Ptr->num_layers;
-  double      dz = In_Ptr->dz;
+  float      dz = In_Ptr->dz;
 
   while ((Iz + 0.5) * dz >= In_Ptr->layerspecs[i].z1
 	 && i < num_layers)
@@ -212,7 +212,7 @@ WriteRAT(OutStruct * Out_Ptr)
  ****/
 void 
 WriteA_layer(short Num_Layers,
-	     double *A_l)
+	     float *A_l)
 {
   short       i;
   FILE       *file;
@@ -234,10 +234,10 @@ WriteA_layer(short Num_Layers,
  *	2 numbers each line: z, A[z].
  ****/
 void 
-WriteA_z(InputStruct * In_Ptr, double *A_z)
+WriteA_z(InputStruct * In_Ptr, float *A_z)
 {
   short       nz = In_Ptr->nz;
-  double      dz = In_Ptr->dz;
+  float      dz = In_Ptr->dz;
   short       iz;
   FILE       *file;
   char        fname[STRLEN];
@@ -259,10 +259,10 @@ WriteA_z(InputStruct * In_Ptr, double *A_z)
  ****/
 void 
 WriteA_rz(InputStruct * In_Ptr,
-	  double **A_rz)
+	  float **A_rz)
 {
   short       ir, iz, nz = In_Ptr->nz, nr = In_Ptr->nr;
-  double      r, z, dr = In_Ptr->dr, dz = In_Ptr->dz;
+  float      r, z, dr = In_Ptr->dr, dz = In_Ptr->dz;
   FILE       *file;
   char        fname[STRLEN];
 
@@ -289,11 +289,11 @@ WriteA_rz(InputStruct * In_Ptr,
  ****/
 void 
 WriteF_z(InputStruct * In_Ptr,
-	 double *A_z)
+	 float *A_z)
 {
   FILE       *file;
   short       iz, nz = In_Ptr->nz;
-  double      mua, dz = In_Ptr->dz;
+  float      mua, dz = In_Ptr->dz;
   char        fname[STRLEN];
 
   strcpy(fname, "Fz");
@@ -319,11 +319,11 @@ WriteF_z(InputStruct * In_Ptr,
  ****/
 void 
 WriteF_rz(InputStruct * In_Ptr,
-	  double **A_rz)
+	  float **A_rz)
 {
   FILE       *file;
   short       ir, iz, nz = In_Ptr->nz, nr = In_Ptr->nr;
-  double      mua, r, z, dr = In_Ptr->dr, dz = In_Ptr->dz;
+  float      mua, r, z, dr = In_Ptr->dr, dz = In_Ptr->dz;
   char        fname[STRLEN];
 
   strcpy(fname, "Frz");
@@ -354,10 +354,10 @@ WriteF_rz(InputStruct * In_Ptr,
  ****/
 void 
 WriteRd_ra(InputStruct * In_Ptr,
-	   double **Rd_ra)
+	   float **Rd_ra)
 {
   short       ir, ia, nr = In_Ptr->nr, na = In_Ptr->na;
-  double      r, a, dr = In_Ptr->dr, da = In_Ptr->da;
+  float      r, a, dr = In_Ptr->dr, da = In_Ptr->da;
   FILE       *file;
   char        fname[STRLEN];
 
@@ -385,10 +385,10 @@ WriteRd_ra(InputStruct * In_Ptr,
  ****/
 void 
 WriteRd_r(InputStruct * In_Ptr,
-	  double *Rd_r)
+	  float *Rd_r)
 {
   short       ir, nr = In_Ptr->nr;
-  double      dr = In_Ptr->dr;
+  float      dr = In_Ptr->dr;
   FILE       *file;
   char        fname[STRLEN];
 
@@ -410,10 +410,10 @@ WriteRd_r(InputStruct * In_Ptr,
  ****/
 void 
 WriteRd_a(InputStruct * In_Ptr,
-	  double *Rd_a)
+	  float *Rd_a)
 {
   short       ia, na = In_Ptr->na;
-  double      da = In_Ptr->da;
+  float      da = In_Ptr->da;
   FILE       *file;
   char        fname[STRLEN];
 
@@ -435,10 +435,10 @@ WriteRd_a(InputStruct * In_Ptr,
  ****/
 void 
 WriteTt_ra(InputStruct * In_Ptr,
-	   double **Tt_ra)
+	   float **Tt_ra)
 {
   short       ir, ia, nr = In_Ptr->nr, na = In_Ptr->na;
-  double      r, a, dr = In_Ptr->dr, da = In_Ptr->da;
+  float      r, a, dr = In_Ptr->dr, da = In_Ptr->da;
   FILE       *file;
   char        fname[STRLEN];
 
@@ -466,10 +466,10 @@ WriteTt_ra(InputStruct * In_Ptr,
  ****/
 void 
 WriteTt_r(InputStruct * In_Ptr,
-	  double *Tt_r)
+	  float *Tt_r)
 {
   short       ir, nr = In_Ptr->nr;
-  double      dr = In_Ptr->dr;
+  float      dr = In_Ptr->dr;
   FILE       *file;
   char        fname[STRLEN];
 
@@ -491,10 +491,10 @@ WriteTt_r(InputStruct * In_Ptr,
  ****/
 void 
 WriteTt_a(InputStruct * In_Ptr,
-	  double *Tt_a)
+	  float *Tt_a)
 {
   short       ia, na = In_Ptr->na;
-  double      da = In_Ptr->da;
+  float      da = In_Ptr->da;
   FILE       *file;
   char        fname[STRLEN];
 
@@ -520,7 +520,7 @@ WriteKFormat(InputStruct * In_Ptr,
 	     OutStruct * Out_Ptr)
 {
   short       i, j;
-  double      dz, dr;
+  float      dz, dr;
   FILE       *file;
   char        fname[STRLEN];
 
@@ -811,12 +811,12 @@ ShowContOrigMenu(char *in_fname)
  *	Absorption density to fluence. A = F/mua;
  ****/
 void 
-A2F(InputStruct * In_Ptr, double **A_rz)
+A2F(InputStruct * In_Ptr, float **A_rz)
 {
   short       nz = In_Ptr->nz, nr = In_Ptr->nr;
-  double      dr = In_Ptr->dr, dz = In_Ptr->dz;
+  float      dr = In_Ptr->dr, dz = In_Ptr->dz;
   short       ir, iz;
-  double      mua;
+  float      mua;
 
   for (ir = 0; ir < nr; ir++)
     for (iz = 0; iz < nz; iz++) {
@@ -830,12 +830,12 @@ A2F(InputStruct * In_Ptr, double **A_rz)
  *	Fluence to absorption density. F = A*mua;
  ****/
 void 
-F2A(InputStruct * In_Ptr, double **A_rz)
+F2A(InputStruct * In_Ptr, float **A_rz)
 {
   short       nz = In_Ptr->nz, nr = In_Ptr->nr;
-  double      dr = In_Ptr->dr, dz = In_Ptr->dz;
+  float      dr = In_Ptr->dr, dz = In_Ptr->dz;
   short       ir, iz;
-  double      mua;
+  float      mua;
 
   for (ir = 0; ir < nr; ir++)
     for (iz = 0; iz < nz; iz++) {
@@ -924,10 +924,10 @@ ShowScanOrigMenu(char *in_fname)
  *	Ext is either "Ars" or "Frs".
  ****/
 void 
-ScanOrigA_r(char *Ext, InputStruct * In_Ptr, double **A_rz)
+ScanOrigA_r(char *Ext, InputStruct * In_Ptr, float **A_rz)
 {
   short       ir, iz, nr = In_Ptr->nr, nz = In_Ptr->nz;
-  double      r, z, dr = In_Ptr->dr, dz = In_Ptr->dz;
+  float      r, z, dr = In_Ptr->dr, dz = In_Ptr->dz;
   FILE       *file;
 
   file = GetWriteFile(Ext);
@@ -950,10 +950,10 @@ ScanOrigA_r(char *Ext, InputStruct * In_Ptr, double **A_rz)
  *	Ext is either "Azs" or "Fzs".
  ****/
 void 
-ScanOrigA_z(char *Ext, InputStruct * In_Ptr, double **A_rz)
+ScanOrigA_z(char *Ext, InputStruct * In_Ptr, float **A_rz)
 {
   short       ir, iz, nr = In_Ptr->nr, nz = In_Ptr->nz;
-  double      r, z, dr = In_Ptr->dr, dz = In_Ptr->dz;
+  float      r, z, dr = In_Ptr->dr, dz = In_Ptr->dz;
   FILE       *file;
 
   file = GetWriteFile(Ext);
@@ -975,10 +975,10 @@ ScanOrigA_z(char *Ext, InputStruct * In_Ptr, double **A_rz)
 /****************************************************************
  ****/
 void 
-ScanOrigRd_r(InputStruct * In_Ptr, double **Rd_ra)
+ScanOrigRd_r(InputStruct * In_Ptr, float **Rd_ra)
 {
   short       ir, ia, nr = In_Ptr->nr, na = In_Ptr->na;
-  double      r, a, dr = In_Ptr->dr, da = In_Ptr->da;
+  float      r, a, dr = In_Ptr->dr, da = In_Ptr->da;
   FILE       *file;
   char        fname[STRLEN];
 
@@ -1002,10 +1002,10 @@ ScanOrigRd_r(InputStruct * In_Ptr, double **Rd_ra)
 /****************************************************************
  ****/
 void 
-ScanOrigRd_a(InputStruct * In_Ptr, double **Rd_ra)
+ScanOrigRd_a(InputStruct * In_Ptr, float **Rd_ra)
 {
   short       ir, ia, nr = In_Ptr->nr, na = In_Ptr->na;
-  double      r, a, dr = In_Ptr->dr, da = In_Ptr->da;
+  float      r, a, dr = In_Ptr->dr, da = In_Ptr->da;
   FILE       *file;
   char        fname[STRLEN];
 
@@ -1029,10 +1029,10 @@ ScanOrigRd_a(InputStruct * In_Ptr, double **Rd_ra)
 /****************************************************************
  ****/
 void 
-ScanOrigTt_r(InputStruct * In_Ptr, double **Tt_ra)
+ScanOrigTt_r(InputStruct * In_Ptr, float **Tt_ra)
 {
   short       ir, ia, nr = In_Ptr->nr, na = In_Ptr->na;
-  double      r, a, dr = In_Ptr->dr, da = In_Ptr->da;
+  float      r, a, dr = In_Ptr->dr, da = In_Ptr->da;
   FILE       *file;
   char        fname[STRLEN];
 
@@ -1056,10 +1056,10 @@ ScanOrigTt_r(InputStruct * In_Ptr, double **Tt_ra)
 /****************************************************************
  ****/
 void 
-ScanOrigTt_a(InputStruct * In_Ptr, double **Tt_ra)
+ScanOrigTt_a(InputStruct * In_Ptr, float **Tt_ra)
 {
   short       ir, ia, nr = In_Ptr->nr, na = In_Ptr->na;
-  double      r, a, dr = In_Ptr->dr, da = In_Ptr->da;
+  float      r, a, dr = In_Ptr->dr, da = In_Ptr->da;
   FILE       *file;
   char        fname[STRLEN];
 

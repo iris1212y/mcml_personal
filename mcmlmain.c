@@ -31,8 +31,8 @@ void ReadParm(FILE* , InputStruct * );
 void CheckParm(FILE* , InputStruct * );
 void InitOutputData(InputStruct, OutStruct *);
 void FreeData(InputStruct, OutStruct *);
-double Rspecular(LayerStruct * );
-void LaunchPhoton(double, LayerStruct *, PhotonStruct *);
+float Rspecular(LayerStruct * );
+void LaunchPhoton(float, LayerStruct *, PhotonStruct *);
 void HopDropSpin(InputStruct  *,PhotonStruct *,OutStruct *);
 void SumScaleResult(InputStruct, OutStruct *);
 void WriteResult(InputStruct, OutStruct, char *);
@@ -63,7 +63,7 @@ time_t PunchTime(char F, char *Msg)
 #else
   static clock_t ut0;	/* user time reference. */
   static time_t  rt0;	/* real time reference. */
-  double secs;
+  float secs;
   char s[STRLEN];
   
   if(F==0) {
@@ -72,7 +72,7 @@ time_t PunchTime(char F, char *Msg)
     return(0);
   }
   else if(F==1)  {
-    secs = (clock() - ut0)/(double)CLOCKS_PER_SEC;
+    secs = (clock() - ut0)/(float)CLOCKS_PER_SEC;
     if (secs<0) secs=0;	/* clock() can overflow. */
     sprintf(s, "User time: %8.0lf sec = %8.2lf hr.  %s\n", 
 	    secs, secs/3600.0, Msg);
@@ -103,7 +103,7 @@ void PredictDoneTime(long P1, long Pt)
   printf("Now %s, ", s);
   
   done_time = now + 
-			(time_t) (PunchTime(2,"")/(double)P1*(Pt-P1));
+			(time_t) (PunchTime(2,"")/(float)P1*(Pt-P1));
   date = localtime(&done_time);
   strftime(s, 80, "%H:%M %x", date);
   printf("End %s\n", s);

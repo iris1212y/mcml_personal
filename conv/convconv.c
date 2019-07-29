@@ -23,7 +23,7 @@ FILE       *GetWriteFile(char *);
 void        AllocConvData(InputStruct *, OutStruct *);
 void        FreeConvData(InputStruct *, OutStruct *);
 float       qtrap(float (*) (float), float, float, float);
-double      BessI0(double);
+float      BessI0(float);
 
 /****************************************************************
  *	Data structures for the binary tree used to store part of
@@ -43,7 +43,7 @@ typedef LINK TREE;
  *	input and output parameters to the integration function.
  ****/
 struct {
-  double      r;
+  float      r;
   short       iz, ia;
   InputStruct *in_ptr;
   OutStruct  *out_ptr;
@@ -238,10 +238,10 @@ FreeTree(TREE Tree)
 /****************************************************************
  *	Compute Itheta shown in the manual.
  ****/
-double
-ITheta(double r, double r2, double R)
+float
+ITheta(float r, float r2, float R)
 {
-  double      temp;
+  float      temp;
 
   if (R >= r + r2)
     temp = 1;
@@ -258,13 +258,13 @@ ITheta(double r, double r2, double R)
 
 /****************************************************************
  ****/
-double
-ExpBessI0(double r, double r2, double R)
+float
+ExpBessI0(float r, float r2, float R)
 {
-  double      expbess;
-  double      _RR = 1 / (R * R);
-  double      x = 4 * r * r2 * _RR;
-  double      y = 2 * (r2 * r2 + r * r) * _RR;
+  float      expbess;
+  float      _RR = 1 / (R * R);
+  float      x = 4 * r * r2 * _RR;
+  float      y = 2 * (r2 * r2 + r * r) * _RR;
 
   expbess = exp(-y + x) * BessI0(x);
   return (expbess);
@@ -273,10 +273,10 @@ ExpBessI0(double r, double r2, double R)
 /****************************************************************
  *	Interpolate for the arrays A_rz[].
  ****/
-double
-A_rzInterp(double **A_rz, double r2)
+float
+A_rzInterp(float **A_rz, float r2)
 {
-  double      ir2, A_lo, A_hi, A_at_r2;
+  float      ir2, A_lo, A_hi, A_at_r2;
   short       iz, ir2lo, nr = ConvVar.in_ptr->nr;
 
   ir2 = r2 / ConvVar.in_ptr->dr;
@@ -304,10 +304,10 @@ A_rzInterp(double **A_rz, double r2)
 /****************************************************************
  *	Interpolate for the arrays Rd_ra[] or Tt_ra[].
  ****/
-double
-RT_raInterp(double **RT_ra, double r2)
+float
+RT_raInterp(float **RT_ra, float r2)
 {
-  double      ir2, RT_lo, RT_hi, RT_at_r2;
+  float      ir2, RT_lo, RT_hi, RT_at_r2;
   short       ia, ir2lo, nr = ConvVar.in_ptr->nr;
 
   ir2 = r2 / ConvVar.in_ptr->dr;
@@ -335,10 +335,10 @@ RT_raInterp(double **RT_ra, double r2)
 /****************************************************************
  *	Interpolate for the arrays Rd_r[] or Tt_r[].
  ****/
-double
-RT_rInterp(double *RT_r, double r2)
+float
+RT_rInterp(float *RT_r, float r2)
 {
-  double      ir2, RT_lo, RT_hi, RT_at_r2;
+  float      ir2, RT_lo, RT_hi, RT_at_r2;
   short       ir2lo, nr = ConvVar.in_ptr->nr;
 
   ir2 = r2 / ConvVar.in_ptr->dr;
@@ -377,7 +377,7 @@ A_rzFGIntegrand(float r2)
 {				/* r" in the integration. */
   float       f;
   short       nr = ConvVar.in_ptr->nr;
-  double      R, r, A_at_r2;
+  float      R, r, A_at_r2;
   LINK        link;
 
   A_at_r2 = A_rzInterp(ConvVar.out_ptr->A_rz, r2);
@@ -407,7 +407,7 @@ Rd_raFGIntegrand(float r2)
 {				/* r" in the integration. */
   float       f;
   short       nr = ConvVar.in_ptr->nr;
-  double      R, r, Rd_at_r2;
+  float      R, r, Rd_at_r2;
   LINK        link;
 
   Rd_at_r2 = RT_raInterp(ConvVar.out_ptr->Rd_ra, r2);
@@ -437,7 +437,7 @@ Rd_rFGIntegrand(float r2)
 {				/* r" in the integration. */
   float       f;
   short       nr = ConvVar.in_ptr->nr;
-  double      R, r, Rd_at_r2;
+  float      R, r, Rd_at_r2;
 
   Rd_at_r2 = RT_rInterp(ConvVar.out_ptr->Rd_r, r2);
 
@@ -460,7 +460,7 @@ Tt_raFGIntegrand(float r2)
 {				/* r" in the integration. */
   float       f;
   short       nr = ConvVar.in_ptr->nr;
-  double      R, r, Tt_at_r2;
+  float      R, r, Tt_at_r2;
   LINK        link;
 
   Tt_at_r2 = RT_raInterp(ConvVar.out_ptr->Tt_ra, r2);
@@ -490,7 +490,7 @@ Tt_rFGIntegrand(float r2)
 {				/* r" in the integration. */
   float       f;
   short       nr = ConvVar.in_ptr->nr;
-  double      R, r, Tt_at_r2;
+  float      R, r, Tt_at_r2;
 
   Tt_at_r2 = RT_rInterp(ConvVar.out_ptr->Tt_r, r2);
 
@@ -506,14 +506,14 @@ Tt_rFGIntegrand(float r2)
 
 /****************************************************************
  ****/
-double
+float
 FlatIntegration(float (*Func) (float))
 {
-  double      rc = ConvVar.r;
-  double      R = ConvVar.in_ptr->beam.R;
-  double      b_max = (ConvVar.in_ptr->nr - 0.5) * ConvVar.in_ptr->dr;
-  double      a = MAX(0, rc - R);
-  double      b = MIN(b_max, rc + R);
+  float      rc = ConvVar.r;
+  float      R = ConvVar.in_ptr->beam.R;
+  float      b_max = (ConvVar.in_ptr->nr - 0.5) * ConvVar.in_ptr->dr;
+  float      a = MAX(0, rc - R);
+  float      b = MIN(b_max, rc + R);
 
   if (a >= b)
     return (0);
@@ -523,14 +523,14 @@ FlatIntegration(float (*Func) (float))
 
 /****************************************************************
  ****/
-double
+float
 GaussIntegration(float (*Func) (float))
 {
-  double      rc = ConvVar.r;
-  double      R = ConvVar.in_ptr->beam.R;
-  double      b_max = (ConvVar.in_ptr->nr - 0.5) * ConvVar.in_ptr->dr;
-  double      a = MAX(0, rc - GAUSSLIMIT * R);
-  double      b = MIN(b_max, rc + GAUSSLIMIT * R);
+  float      rc = ConvVar.r;
+  float      R = ConvVar.in_ptr->beam.R;
+  float      b_max = (ConvVar.in_ptr->nr - 0.5) * ConvVar.in_ptr->dr;
+  float      a = MAX(0, rc - GAUSSLIMIT * R);
+  float      b = MIN(b_max, rc + GAUSSLIMIT * R);
 
   if (a >= b)
     return (0);
@@ -545,7 +545,7 @@ ConvA_rz(InputStruct * In_Ptr,
 	 OutStruct * Out_Ptr)
 {
   short       irc, iz;
-  double      rc, P = In_Ptr->beam.P, R = In_Ptr->beam.R;
+  float      rc, P = In_Ptr->beam.P, R = In_Ptr->beam.R;
 
   puts("The convolution may take a little while. Wait...");
   for (irc = 0; irc < In_Ptr->nrc; irc++) {
@@ -574,8 +574,8 @@ ConvRd_ra(InputStruct * In_Ptr,
 	  OutStruct * Out_Ptr)
 {
   short       irc, ia;
-  double      rc, P = In_Ptr->beam.P, R = In_Ptr->beam.R;
-  double      b_max = (In_Ptr->nr - 1) * In_Ptr->dr;
+  float      rc, P = In_Ptr->beam.P, R = In_Ptr->beam.R;
+  float      b_max = (In_Ptr->nr - 1) * In_Ptr->dr;
 
   puts("The convolution may take a little while. Wait...");
   for (irc = 0; irc < In_Ptr->nrc; irc++) {
@@ -603,8 +603,8 @@ void
 ConvRd_r(InputStruct * In_Ptr, OutStruct * Out_Ptr)
 {
   short       irc;
-  double      rc, P = In_Ptr->beam.P, R = In_Ptr->beam.R;
-  double      b_max = (In_Ptr->nr - 1) * In_Ptr->dr;
+  float      rc, P = In_Ptr->beam.P, R = In_Ptr->beam.R;
+  float      b_max = (In_Ptr->nr - 1) * In_Ptr->dr;
 
   for (irc = 0; irc < In_Ptr->nrc; irc++) {
     rc = (irc + 0.5) * In_Ptr->drc;
@@ -626,8 +626,8 @@ void
 ConvTt_ra(InputStruct * In_Ptr, OutStruct * Out_Ptr)
 {
   short       irc, ia;
-  double      rc, P = In_Ptr->beam.P, R = In_Ptr->beam.R;
-  double      b_max = (In_Ptr->nr - 1) * In_Ptr->dr;
+  float      rc, P = In_Ptr->beam.P, R = In_Ptr->beam.R;
+  float      b_max = (In_Ptr->nr - 1) * In_Ptr->dr;
 
   puts("The convolution may take a little while. Wait...");
   for (irc = 0; irc < In_Ptr->nrc; irc++) {
@@ -655,8 +655,8 @@ void
 ConvTt_r(InputStruct * In_Ptr, OutStruct * Out_Ptr)
 {
   short       irc;
-  double      rc, P = In_Ptr->beam.P, R = In_Ptr->beam.R;
-  double      b_max = (In_Ptr->nr - 1) * In_Ptr->dr;
+  float      rc, P = In_Ptr->beam.P, R = In_Ptr->beam.R;
+  float      b_max = (In_Ptr->nr - 1) * In_Ptr->dr;
 
   for (irc = 0; irc < In_Ptr->nrc; irc++) {
     rc = (irc + 0.5) * In_Ptr->drc;
@@ -696,11 +696,11 @@ ShowOutConvMenu(char *in_fname)
  ****/
 void
 WriteA_rzc(InputStruct * In_Ptr,
-	   double **A_rzc)
+	   float **A_rzc)
 {
   FILE       *file;
   short       ir, iz, nr = In_Ptr->nr, nz = In_Ptr->nz;
-  double      r, z, dr = In_Ptr->dr, dz = In_Ptr->dz;
+  float      r, z, dr = In_Ptr->dr, dz = In_Ptr->dz;
   char        fname[STRLEN];
 
 #if IBMPC
@@ -730,11 +730,11 @@ WriteA_rzc(InputStruct * In_Ptr,
  ****/
 void
 WriteF_rzc(InputStruct * In_Ptr,
-	   double **A_rzc)
+	   float **A_rzc)
 {
   FILE       *file;
   short       ir, iz, nr = In_Ptr->nr, nz = In_Ptr->nz;
-  double      mua, r, z, dr = In_Ptr->dr, dz = In_Ptr->dz;
+  float      mua, r, z, dr = In_Ptr->dr, dz = In_Ptr->dz;
   char        fname[STRLEN];
 
 #if IBMPC
@@ -768,10 +768,10 @@ WriteF_rzc(InputStruct * In_Ptr,
  ****/
 void
 WriteRd_rac(InputStruct * In_Ptr,
-	    double **Rd_rac)
+	    float **Rd_rac)
 {
   short       ir, ia, nr = In_Ptr->nr, na = In_Ptr->na;
-  double      r, a, dr = In_Ptr->dr, da = In_Ptr->da;
+  float      r, a, dr = In_Ptr->dr, da = In_Ptr->da;
   FILE       *file;
   char        fname[STRLEN];
 
@@ -802,10 +802,10 @@ WriteRd_rac(InputStruct * In_Ptr,
  ****/
 void
 WriteRd_rc(InputStruct * In_Ptr,
-	   double *Rd_rc)
+	   float *Rd_rc)
 {
   short       ir, nr = In_Ptr->nr;
-  double      dr = In_Ptr->dr;
+  float      dr = In_Ptr->dr;
   FILE       *file;
   char        fname[STRLEN];
 
@@ -825,10 +825,10 @@ WriteRd_rc(InputStruct * In_Ptr,
  ****/
 void
 WriteTt_rac(InputStruct * In_Ptr,
-	    double **Tt_rac)
+	    float **Tt_rac)
 {
   short       ir, ia, nr = In_Ptr->nr, na = In_Ptr->na;
-  double      r, a, dr = In_Ptr->dr, da = In_Ptr->da;
+  float      r, a, dr = In_Ptr->dr, da = In_Ptr->da;
   FILE       *file;
   char        fname[STRLEN];
 
@@ -859,10 +859,10 @@ WriteTt_rac(InputStruct * In_Ptr,
  ****/
 void
 WriteTt_rc(InputStruct * In_Ptr,
-	   double *Tt_rc)
+	   float *Tt_rc)
 {
   short       ir, nr = In_Ptr->nr;
-  double      dr = In_Ptr->dr;
+  float      dr = In_Ptr->dr;
   FILE       *file;
   char        fname[STRLEN];
 
@@ -1038,11 +1038,11 @@ OutputConvData(InputStruct * In_Ptr,
  *	Absorption density to fluence. A = F/mua;
  ****/
 void
-A2Fconv(InputStruct * In_Ptr, double **A_rz)
+A2Fconv(InputStruct * In_Ptr, float **A_rz)
 {
   short       nz = In_Ptr->nz, nrc = In_Ptr->nrc;
   short       ir, iz;
-  double      mua;
+  float      mua;
 
   for (ir = 0; ir < nrc; ir++)
     for (iz = 0; iz < nz; iz++) {
@@ -1056,11 +1056,11 @@ A2Fconv(InputStruct * In_Ptr, double **A_rz)
  *	Fluence to absorption density. F = A*mua;
  ****/
 void
-F2Aconv(InputStruct * In_Ptr, double **A_rz)
+F2Aconv(InputStruct * In_Ptr, float **A_rz)
 {
   short       nz = In_Ptr->nz, nrc = In_Ptr->nrc;
   short       ir, iz;
-  double      mua;
+  float      mua;
 
   for (ir = 0; ir < nrc; ir++)
     for (iz = 0; iz < nz; iz++) {
@@ -1176,10 +1176,10 @@ ShowScanConvMenu(char *in_fname)
  *	Ext is either "Ars" or "Frs".
  ****/
 void
-ScanConvA_r(char *Ext, InputStruct * In_Ptr, double **A_rzc)
+ScanConvA_r(char *Ext, InputStruct * In_Ptr, float **A_rzc)
 {
   short       irc, iz, nrc = In_Ptr->nrc, nz = In_Ptr->nz;
-  double      r, z, drc = In_Ptr->drc, dz = In_Ptr->dz;
+  float      r, z, drc = In_Ptr->drc, dz = In_Ptr->dz;
   FILE       *file;
 
   file = GetWriteFile(Ext);
@@ -1202,10 +1202,10 @@ ScanConvA_r(char *Ext, InputStruct * In_Ptr, double **A_rzc)
  *	Ext is either "Azs" or "Fzs".
  ****/
 void
-ScanConvA_z(char *Ext, InputStruct * In_Ptr, double **A_rzc)
+ScanConvA_z(char *Ext, InputStruct * In_Ptr, float **A_rzc)
 {
   short       irc, iz, nrc = In_Ptr->nrc, nz = In_Ptr->nz;
-  double      r, z, drc = In_Ptr->drc, dz = In_Ptr->dz;
+  float      r, z, drc = In_Ptr->drc, dz = In_Ptr->dz;
   FILE       *file;
 
   file = GetWriteFile(Ext);
@@ -1227,10 +1227,10 @@ ScanConvA_z(char *Ext, InputStruct * In_Ptr, double **A_rzc)
 /****************************************************************
  ****/
 void
-ScanConvRd_r(InputStruct * In_Ptr, double **Rd_rac)
+ScanConvRd_r(InputStruct * In_Ptr, float **Rd_rac)
 {
   short       irc, ia, nrc = In_Ptr->nrc, na = In_Ptr->na;
-  double      r, a, drc = In_Ptr->drc, da = In_Ptr->da;
+  float      r, a, drc = In_Ptr->drc, da = In_Ptr->da;
   FILE       *file;
   char        fname[STRLEN];
 
@@ -1258,10 +1258,10 @@ ScanConvRd_r(InputStruct * In_Ptr, double **Rd_rac)
 /****************************************************************
  ****/
 void
-ScanConvRd_a(InputStruct * In_Ptr, double **Rd_rac)
+ScanConvRd_a(InputStruct * In_Ptr, float **Rd_rac)
 {
   short       irc, ia, nrc = In_Ptr->nrc, na = In_Ptr->na;
-  double      r, a, drc = In_Ptr->drc, da = In_Ptr->da;
+  float      r, a, drc = In_Ptr->drc, da = In_Ptr->da;
   FILE       *file;
   char        fname[STRLEN];
 
@@ -1289,10 +1289,10 @@ ScanConvRd_a(InputStruct * In_Ptr, double **Rd_rac)
 /****************************************************************
  ****/
 void
-ScanConvTt_r(InputStruct * In_Ptr, double **Tt_rac)
+ScanConvTt_r(InputStruct * In_Ptr, float **Tt_rac)
 {
   short       irc, ia, nrc = In_Ptr->nrc, na = In_Ptr->na;
-  double      r, a, drc = In_Ptr->drc, da = In_Ptr->da;
+  float      r, a, drc = In_Ptr->drc, da = In_Ptr->da;
   FILE       *file;
   char        fname[STRLEN];
 
@@ -1320,10 +1320,10 @@ ScanConvTt_r(InputStruct * In_Ptr, double **Tt_rac)
 /****************************************************************
  ****/
 void
-ScanConvTt_a(InputStruct * In_Ptr, double **Tt_rac)
+ScanConvTt_a(InputStruct * In_Ptr, float **Tt_rac)
 {
   short       irc, ia, nrc = In_Ptr->nrc, na = In_Ptr->na;
-  double      r, a, drc = In_Ptr->drc, da = In_Ptr->da;
+  float      r, a, drc = In_Ptr->drc, da = In_Ptr->da;
   FILE       *file;
   char        fname[STRLEN];
 

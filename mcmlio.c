@@ -269,7 +269,7 @@ void ReadDzDr(FILE *File_Ptr, InputStruct *In_Ptr)
   /** read in dz, dr. **/
   strcpy(buf, FindDataLine(File_Ptr));
   if(buf[0]=='\0') nrerror("Reading dz, dr.\n");
-  sscanf(buf, "%lf%lf", &In_Ptr->dz, &In_Ptr->dr);
+  sscanf(buf, "%f%f", &In_Ptr->dz, &In_Ptr->dr);
   if(In_Ptr->dz<=0) nrerror("Nonpositive dz.\n");
   if(In_Ptr->dr<=0) nrerror("Nonpositive dr.\n");
 }
@@ -323,7 +323,7 @@ void ReadAmbient(FILE *File_Ptr,
 				 char *side)
 {
   char buf[STRLEN], msg[STRLEN];
-  double n;
+  float n;
 
   strcpy(buf, FindDataLine(File_Ptr));
   if(buf[0]=='\0') {
@@ -331,7 +331,7 @@ void ReadAmbient(FILE *File_Ptr,
 	nrerror(msg);
   }
 
-  sscanf(buf, "%lf", &n );
+  sscanf(buf, "%f", &n );
   if(n<=0) nrerror("Wrong n.\n");
   Layer_Ptr->n = n;
 }
@@ -349,15 +349,15 @@ void ReadAmbient(FILE *File_Ptr,
  ****/
 Boolean ReadOneLayer(FILE *File_Ptr, 
 					 LayerStruct * Layer_Ptr,
-					 double *Z_Ptr)
+					 float *Z_Ptr)
 {
   char buf[STRLEN], msg[STRLEN];
-  double d, n, mua, mus, g;	/* d is thickness. */
+  float d, n, mua, mus, g;	/* d is thickness. */
 
   strcpy(buf, FindDataLine(File_Ptr));
   if(buf[0]=='\0') return(1);	/* error. */
 
-  sscanf(buf, "%lf%lf%lf%lf%lf", &n, &mua, &mus, &g, &d);
+  sscanf(buf, "%f%f%f%f%f", &n, &mua, &mus, &g, &d);
   if(d<0 || n<=0 || mua<0 || mus<0 || g<0 || g>1) 
     return(1);			/* error. */
     
@@ -381,7 +381,7 @@ void ReadLayerSpecs(FILE *File_Ptr,
 {
   char msg[STRLEN];
   short i=0;
-  double z = 0.0;	/* z coordinate of the current layer. */
+  float z = 0.0;	/* z coordinate of the current layer. */
   
   /* Allocate an array for the layer parameters. */
   /* layer 0 and layer Num_Layers + 1 are for ambient. */
@@ -410,7 +410,7 @@ void CriticalAngle( short Num_Layers,
 					LayerStruct ** Layerspecs_PP)
 {
   short i=0;
-  double n1, n2;
+  float n1, n2;
   
   for(i=1; i<=Num_Layers; i++)  {
     n1 = (*Layerspecs_PP)[i].n;
@@ -614,7 +614,7 @@ void Sum2DRd(InputStruct In_Parm, OutStruct * Out_Ptr)
   short nr = In_Parm.nr;
   short na = In_Parm.na;
   short ir,ia;
-  double sum;
+  float sum;
   
   for(ir=0; ir<nr; ir++)  {
     sum = 0.0;
@@ -643,7 +643,7 @@ short IzToLayer(short Iz, InputStruct In_Parm)
 {
   short i=1;	/* index to layer. */
   short num_layers = In_Parm.num_layers;
-  double dz = In_Parm.dz;
+  float dz = In_Parm.dz;
   
   while( (Iz+0.5)*dz >= In_Parm.layerspecs[i].z1 
 	&& i<num_layers) i++;
@@ -659,7 +659,7 @@ void Sum2DA(InputStruct In_Parm, OutStruct * Out_Ptr)
   short nz = In_Parm.nz;
   short nr = In_Parm.nr;
   short iz,ir;
-  double sum;
+  float sum;
   
   for(iz=0; iz<nz; iz++)  {
     sum = 0.0;
@@ -684,7 +684,7 @@ void Sum2DTt(InputStruct In_Parm, OutStruct * Out_Ptr)
   short nr = In_Parm.nr;
   short na = In_Parm.na;
   short ir,ia;
-  double sum;
+  float sum;
   
   for(ir=0; ir<nr; ir++)  {
     sum = 0.0;
@@ -726,10 +726,10 @@ void ScaleRdTt(InputStruct In_Parm, OutStruct *	Out_Ptr)
 {
   short nr = In_Parm.nr;
   short na = In_Parm.na;
-  double dr = In_Parm.dr;
-  double da = In_Parm.da;
+  float dr = In_Parm.dr;
+  float da = In_Parm.da;
   short ir,ia;
-  double scale1, scale2;
+  float scale1, scale2;
   
   scale1 = 4.0*PI*PI*dr*sin(da/2)*dr*In_Parm.num_photons;
 	/* The factor (ir+0.5)*sin(2a) to be added. */
@@ -760,7 +760,7 @@ void ScaleRdTt(InputStruct In_Parm, OutStruct *	Out_Ptr)
     Out_Ptr->Tt_a[ia] *= scale2;
   }
   
-  scale2 = 1.0/(double)In_Parm.num_photons;
+  scale2 = 1.0/(float)In_Parm.num_photons;
   Out_Ptr->Rd *= scale2;
   Out_Ptr->Tt *= scale2;
 }
@@ -772,12 +772,12 @@ void ScaleA(InputStruct In_Parm, OutStruct * Out_Ptr)
 {
   short nz = In_Parm.nz;
   short nr = In_Parm.nr;
-  double dz = In_Parm.dz;
-  double dr = In_Parm.dr;
+  float dz = In_Parm.dz;
+  float dr = In_Parm.dr;
   short nl = In_Parm.num_layers;
   short iz,ir;
   short il;
-  double scale1;
+  float scale1;
   
   /* Scale A_rz. */
   scale1 = 2.0*PI*dr*dr*dz*In_Parm.num_photons;	
@@ -793,7 +793,7 @@ void ScaleA(InputStruct In_Parm, OutStruct * Out_Ptr)
     Out_Ptr->A_z[iz] *= scale1;
   
   /* Scale A_l. Avoid int/int. */
-  scale1 = 1.0/(double)In_Parm.num_photons;	
+  scale1 = 1.0/(float)In_Parm.num_photons;	
   for(il=0; il<=nl+1; il++)
     Out_Ptr->A_l[il] *= scale1;
   

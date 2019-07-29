@@ -274,8 +274,8 @@ ReadLayerParm(FILE * File_Ptr,
 {
   char        buf[STRLEN];
   short       i = 0;
-  double      d, n, mua, mus, g;
-  double      z = 0.0;		/* z coordinate of the current layer. */
+  float      d, n, mua, mus, g;
+  float      z = 0.0;		/* z coordinate of the current layer. */
 
   /* layer 0 and layer Num_Layers + 1 are for ambient. */
   *Layers_PP = (LayerStruct *)
@@ -284,11 +284,11 @@ ReadLayerParm(FILE * File_Ptr,
     nrerror("allocation failure in ReadLayerParm()");
 
   strcpy(buf, FindDataLine(File_Ptr));
-  sscanf(buf, "%lf", &n);
+  sscanf(buf, "%f", &n);
   (*Layers_PP)[i].n = n;
   for (i = 1; i <= Num_Layers; i++) {
     strcpy(buf, FindDataLine(File_Ptr));
-    sscanf(buf, "%lf%lf%lf%lf%lf", &n, &mua, &mus, &g, &d);
+    sscanf(buf, "%f%f%f%f%f", &n, &mua, &mus, &g, &d);
     (*Layers_PP)[i].n = n;
     (*Layers_PP)[i].mua = mua;
     (*Layers_PP)[i].mus = mus;
@@ -298,7 +298,7 @@ ReadLayerParm(FILE * File_Ptr,
     (*Layers_PP)[i].z1 = z;
   }
   strcpy(buf, FindDataLine(File_Ptr));
-  sscanf(buf, "%lf", &n);
+  sscanf(buf, "%f", &n);
   (*Layers_PP)[i].n = n;
 }
 
@@ -333,7 +333,7 @@ ReadInParm(FILE * File_Ptr, InputStruct * In_Ptr)
 
   /** read in dz, dr. **/
   strcpy(buf, FindDataLine(File_Ptr));
-  sscanf(buf, "%lf%lf", &In_Ptr->dz, &In_Ptr->dr);
+  sscanf(buf, "%f%f", &In_Ptr->dz, &In_Ptr->dr);
 
   /** read in nz, nr, na and compute da. **/
   strcpy(buf, FindDataLine(File_Ptr));
@@ -359,16 +359,16 @@ ReadRAT(FILE * File_Ptr,
   char        buf[STRLEN];
 
   strcpy(buf, FindDataLine(File_Ptr));
-  sscanf(buf, "%lf", &(Out_Ptr->Rsp));
+  sscanf(buf, "%f", &(Out_Ptr->Rsp));
 
   strcpy(buf, FindDataLine(File_Ptr));
-  sscanf(buf, "%lf", &(Out_Ptr->Rd));
+  sscanf(buf, "%f", &(Out_Ptr->Rd));
 
   strcpy(buf, FindDataLine(File_Ptr));
-  sscanf(buf, "%lf", &(Out_Ptr->A));
+  sscanf(buf, "%f", &(Out_Ptr->A));
 
   strcpy(buf, FindDataLine(File_Ptr));
-  sscanf(buf, "%lf", &(Out_Ptr->Tt));
+  sscanf(buf, "%f", &(Out_Ptr->Tt));
 }
 
 /****************************************************************
@@ -383,7 +383,7 @@ ReadA_layer(FILE * File_Ptr,
 
   for (i = 1; i <= Num_Layers; i++) {
     strcpy(buf, FindDataLine(File_Ptr));
-    sscanf(buf, "%lf", &(Out_Ptr->A_l[i]));
+    sscanf(buf, "%f", &(Out_Ptr->A_l[i]));
   }
 }
 
@@ -399,7 +399,7 @@ ReadA_z(FILE * File_Ptr,
 
   for (i = 0; i < Nz; i++) {
     strcpy(buf, FindDataLine(File_Ptr));
-    sscanf(buf, "%lf", &(Out_Ptr->A_z[i]));
+    sscanf(buf, "%f", &(Out_Ptr->A_z[i]));
   }
 }
 
@@ -415,7 +415,7 @@ ReadRd_r(FILE * File_Ptr,
 
   for (i = 0; i < Nr; i++) {
     strcpy(buf, FindDataLine(File_Ptr));
-    sscanf(buf, "%lf", &(Out_Ptr->Rd_r[i]));
+    sscanf(buf, "%f", &(Out_Ptr->Rd_r[i]));
   }
 }
 
@@ -431,7 +431,7 @@ ReadRd_a(FILE * File_Ptr,
 
   for (i = 0; i < Na; i++) {
     strcpy(buf, FindDataLine(File_Ptr));
-    sscanf(buf, "%lf", &(Out_Ptr->Rd_a[i]));
+    sscanf(buf, "%f", &(Out_Ptr->Rd_a[i]));
   }
 }
 
@@ -447,7 +447,7 @@ ReadTt_r(FILE * File_Ptr,
 
   for (i = 0; i < Nr; i++) {
     strcpy(buf, FindDataLine(File_Ptr));
-    sscanf(buf, "%lf", &(Out_Ptr->Tt_r[i]));
+    sscanf(buf, "%f", &(Out_Ptr->Tt_r[i]));
   }
 }
 
@@ -463,10 +463,10 @@ ReadTt_a(FILE * File_Ptr,
 
   for (i = 0; i < Na; i++) {
     /*
-     * strcpy(buf, FindDataLine(File_Ptr)); sscanf(buf, "%lf",
+     * strcpy(buf, FindDataLine(File_Ptr)); sscanf(buf, "%f",
      * &(Out_Ptr->Tt_a[i]));
      */
-    fscanf(File_Ptr, "%lf", &(Out_Ptr->Tt_a[i]));
+    fscanf(File_Ptr, "%f", &(Out_Ptr->Tt_a[i]));
   }
 }
 
@@ -482,7 +482,7 @@ ReadA_rz(FILE * File_Ptr,
 
   for (ir = 0; ir < Nr; ir++)
     for (iz = 0; iz < Nz; iz++)
-      fscanf(File_Ptr, "%lf ", &(Out_Ptr->A_rz[ir][iz]));
+      fscanf(File_Ptr, "%f ", &(Out_Ptr->A_rz[ir][iz]));
 }
 
 /****************************************************************
@@ -497,7 +497,7 @@ ReadRd_ra(FILE * File_Ptr,
 
   for (ir = 0; ir < Nr; ir++)
     for (ia = 0; ia < Na; ia++)
-      fscanf(File_Ptr, "%lf ", &(Out_Ptr->Rd_ra[ir][ia]));
+      fscanf(File_Ptr, "%f ", &(Out_Ptr->Rd_ra[ir][ia]));
 }
 
 /****************************************************************
@@ -512,7 +512,7 @@ ReadTt_ra(FILE * File_Ptr,
 
   for (ir = 0; ir < Nr; ir++)
     for (ia = 0; ia < Na; ia++)
-      fscanf(File_Ptr, "%lf ", &(Out_Ptr->Tt_ra[ir][ia]));
+      fscanf(File_Ptr, "%f ", &(Out_Ptr->Tt_ra[ir][ia]));
 }
 
 /****************************************************************
