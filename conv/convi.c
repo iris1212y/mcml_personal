@@ -274,8 +274,8 @@ ReadLayerParm(FILE * File_Ptr,
 {
   char        buf[STRLEN];
   short       i = 0;
-  double      d, n, mua, mus, g;
-  double      z = 0.0;		/* z coordinate of the current layer. */
+  float      d, n, mua, mus, g;
+  float      z = 0.0;		/* z coordinate of the current layer. */
 
   /* layer 0 and layer Num_Layers + 1 are for ambient. */
   *Layers_PP = (LayerStruct *)

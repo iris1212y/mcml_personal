@@ -1,5 +1,5 @@
 /****
- *  This files plot a series of contour lines for a 2D array of double.
+ *  This files plot a series of contour lines for a 2D array of float.
  *  4/14/92.
  ****/
 
@@ -32,11 +32,11 @@
 FILE       *GetWriteFile(char *Ext);	/* in conho.c. */
 
 struct XY {
-  double      x, y;
+  float      x, y;
 };
 
 struct XYpairs {
-  double      x, y;
+  float      x, y;
   struct XYpairs *next;
 };
 
@@ -60,7 +60,7 @@ typedef struct {		/* a que of pairs. */
 
 
 struct Isolines {
-  double      iso_val;		/* z value of the contour line. */
+  float      iso_val;		/* z value of the contour line. */
   PairList    pairs;
   struct Isolines *next;
 };
@@ -69,15 +69,15 @@ typedef struct Isolines *IsoList;
 
 
 
-double 
-ZMin(double **Z,
+float 
+ZMin(float **Z,
      long IXmax,
      long IYmax,
-     double Dx,
-     double Dy,
+     float Dx,
+     float Dy,
      struct XY * Pmin_Ptr)
 {
-  double      zmin;
+  float      zmin;
   long        i, j;
 
   zmin = Z[0][0];
@@ -92,15 +92,15 @@ ZMin(double **Z,
 }
 
 
-double 
-ZMax(double **Z,
+float 
+ZMax(float **Z,
      long IXmax,
      long IYmax,
-     double Dx,
-     double Dy,
+     float Dx,
+     float Dy,
      struct XY * Pmax_Ptr)
 {
-  double      zmax;
+  float      zmax;
   long        i, j;
 
   zmax = Z[0][0];
@@ -117,7 +117,7 @@ ZMax(double **Z,
 
 /* Get the isovalues from user. */
 IsoList 
-GetIsoValues(double Z_Min, double Z_Max)
+GetIsoValues(float Z_Min, float Z_Max)
 {
   IsoList     head;
   char        in_str[256];
@@ -151,9 +151,9 @@ GetIsoValues(double Z_Min, double Z_Max)
  ****/
 void 
 IsoPositionI(PairList pair,
-	     double iso_val, double **Z,
+	     float iso_val, float **Z,
 	     long i, long j,
-	     double Dx, double Dy)
+	     float Dx, float Dy)
 {
   pair->y = (j + 0.5) * Dy;
   if (Z[i][j] != Z[i + 1][j])
@@ -171,9 +171,9 @@ IsoPositionI(PairList pair,
  ****/
 void 
 IsoPositionJ(PairList pair,
-	     double iso_val, double **Z,
+	     float iso_val, float **Z,
 	     long i, long j,
-	     double Dx, double Dy)
+	     float Dx, float Dy)
 {
   pair->x = (i + 0.5) * Dx;
   if (Z[i][j + 1] != Z[i][j])
@@ -184,9 +184,9 @@ IsoPositionJ(PairList pair,
 
 void 
 IsoPosition(PairList pair,
-	    double iso_val, double **Z,
+	    float iso_val, float **Z,
 	    long i, long j,
-	    double Dx, double Dy)
+	    float Dx, float Dy)
 {
 
   if (INTERSECTI(iso_val, Z, i, j))
@@ -207,12 +207,12 @@ AllocPair(void)
 }
 
 void 
-GetAnIsoLine(IsoList IsoNode, double **Z,
+GetAnIsoLine(IsoList IsoNode, float **Z,
 	     long IXmax, long IYmax,
-	     double Dx, double Dy)
+	     float Dx, float Dy)
 {
   long        i, j;
-  double      ival = IsoNode->iso_val;
+  float      ival = IsoNode->iso_val;
   PairList    pair_tail;
 
   for (j = 0; j < IYmax - 1; j++)
@@ -241,7 +241,7 @@ GetAnIsoLine(IsoList IsoNode, double **Z,
  *	Therefore, we use -1 for the 4th quadrant instead of 4.
  ****/
 short 
-GetQuadrant(double x, double y)
+GetQuadrant(float x, float y)
 {
   if (x > 0 && y >= 0)
     return (1);			/* Include +x-axis. */
@@ -267,7 +267,7 @@ OutOfOrder(PairList This,	/* current pair. */
 	   PairList Next,
 	   struct XY Pmax)
 {
-  double      x0, y0, x1, y1;
+  float      x0, y0, x1, y1;
   short       q0, q1;		/* Quadrants. */
   char        out_order;
 
@@ -363,11 +363,11 @@ LoopAnIsoLine(PairList * PairHeadPtr)
 
 void 
 GetIsoLines(IsoList isos,
-	    double **Z,
+	    float **Z,
 	    long IXmax,
 	    long IYmax,
-	    double Dx,
-	    double Dy,
+	    float Dx,
+	    float Dy,
 	    struct XY Pmax)
 {
   IsoList     node = isos;
@@ -484,15 +484,15 @@ FreeIsoLines(IsoList IsoHead)
 
 
 void 
-IsoPlot(double **Z,		/* the 2D array Z[i][j]. */
+IsoPlot(float **Z,		/* the 2D array Z[i][j]. */
 	long int IXmax,
 	long int IYmax,		/* the 0<=i<=IXmax, 0<=j<=IYmax. */
-	double Dx,
-	double Dy)
+	float Dx,
+	float Dy)
 {				/* the gridline separations. */
   FILE       *isofile;		/* send isolines to this file. */
   struct XY   pmin, pmax;	/* the xy positions of the min & max. */
-  double      zmin, zmax;
+  float      zmin, zmax;
   IsoList     isos;
   char        fname[128] = "iso";
 

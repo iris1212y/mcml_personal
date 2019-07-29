@@ -73,11 +73,11 @@
  *	and lower boundary respectively.
  ****/
 typedef struct {
-  double      z0, z1;		/* z coordinates of a layer. [cm] */
-  double      n;		/* refractive index of a layer. */
-  double      mua;		/* absorption coefficient. [1/cm] */
-  double      mus;		/* scattering coefficient. [1/cm] */
-  double      g;		/* anisotropy. */
+  float      z0, z1;		/* z coordinates of a layer. [cm] */
+  float      n;		/* refractive index of a layer. */
+  float      mua;		/* absorption coefficient. [1/cm] */
+  float      mus;		/* scattering coefficient. [1/cm] */
+  float      g;		/* anisotropy. */
 }           LayerStruct;
 
 /****
@@ -92,8 +92,8 @@ typedef struct {
   enum {
     pencil, flat, gaussian, others
   }           type;		/* beam type. */
-  double      P;		/* total power. [J] */
-  double      R;		/* radius. [cm]     */
+  float      P;		/* total power. [J] */
+  float      R;		/* radius. [cm]     */
 }           BeamStruct;
 
 /****
@@ -128,12 +128,12 @@ typedef struct {
   /* 'A' for ASCII, */
   /* 'B' for binary. */
   long        num_photons;	/* to be traced. */
-  double      Wth;		/* play roulette if photon */
+  float      Wth;		/* play roulette if photon */
   /* weight < Wth. */
 
-  double      dz;		/* z grid separation.[cm] */
-  double      dr;		/* r grid separation.[cm] */
-  double      da;		/* alpha grid separation. */
+  float      dz;		/* z grid separation.[cm] */
+  float      dr;		/* r grid separation.[cm] */
+  float      da;		/* alpha grid separation. */
   /* [radian] */
   short       nz;		/* array range 0..nz-1. */
   short       nr;		/* array range 0..nr-1. */
@@ -143,7 +143,7 @@ typedef struct {
   LayerStruct *layerspecs;	/* layer parameters. */
 
   BeamStruct  beam;		/* incident beam of finite size. */
-  double      drc;		/* convolution r grid separation.[cm] */
+  float      drc;		/* convolution r grid separation.[cm] */
   short       nrc;		/* convolution array range 0..nrc-1. */
   float       eps;		/* relative error in convolution. */
 }           InputStruct;
@@ -182,36 +182,36 @@ typedef struct {
  *	See manual for the physcial quantities.
  ****/
 typedef struct {
-  double      Rsp;		/* specular reflectance. [-] */
-  double    **Rd_ra;		/* 2D distribution of diffuse */
+  float      Rsp;		/* specular reflectance. [-] */
+  float    **Rd_ra;		/* 2D distribution of diffuse */
   /* reflectance. [1/(cm2 sr)] */
-  double     *Rd_r;		/* 1D radial distribution of diffuse */
+  float     *Rd_r;		/* 1D radial distribution of diffuse */
   /* reflectance. [1/cm2] */
-  double     *Rd_a;		/* 1D angular distribution of diffuse */
+  float     *Rd_a;		/* 1D angular distribution of diffuse */
   /* reflectance. [1/sr] */
-  double      Rd;		/* total diffuse reflectance. [-] */
+  float      Rd;		/* total diffuse reflectance. [-] */
 
-  double    **A_rz;		/* 2D probability density in turbid */
+  float    **A_rz;		/* 2D probability density in turbid */
   /* media over r & z. [1/cm3] */
-  double     *A_z;		/* 1D probability density over z. */
+  float     *A_z;		/* 1D probability density over z. */
   /* [1/cm] */
-  double     *A_l;		/* each layer's absorption */
+  float     *A_l;		/* each layer's absorption */
   /* probability. [-] */
-  double      A;		/* total absorption probability. [-] */
+  float      A;		/* total absorption probability. [-] */
 
-  double    **Tt_ra;		/* 2D distribution of total */
+  float    **Tt_ra;		/* 2D distribution of total */
   /* transmittance. [1/(cm2 sr)] */
-  double     *Tt_r;		/* 1D radial distribution of */
+  float     *Tt_r;		/* 1D radial distribution of */
   /* transmittance. [1/cm2] */
-  double     *Tt_a;		/* 1D angular distribution of */
+  float     *Tt_a;		/* 1D angular distribution of */
   /* transmittance. [1/sr] */
-  double      Tt;		/* total transmittance. [-] */
+  float      Tt;		/* total transmittance. [-] */
 
-  double    **Rd_rac;		/* convolved data. [J/(cm2 sr)] */
-  double     *Rd_rc;		/* [J/cm2]  	 */
-  double    **A_rzc;		/* [J/cm3]  	 */
-  double    **Tt_rac;		/* [J/(cm2 sr)] */
-  double     *Tt_rc;		/* [J/cm2]  	 */
+  float    **Rd_rac;		/* convolved data. [J/(cm2 sr)] */
+  float     *Rd_rc;		/* [J/cm2]  	 */
+  float    **A_rzc;		/* [J/cm3]  	 */
+  float    **Tt_rac;		/* [J/(cm2 sr)] */
+  float     *Tt_rc;		/* [J/cm2]  	 */
 
   char        allocated;	/* set to 1 when arrays are allocated. */
   ConvStruct  conved;
@@ -222,20 +222,20 @@ typedef struct {
  *	release of arrays and matrices.
  *	Modified from Numerical Recipes in C.
  ****/
-double     *AllocVector(short, short);
-double    **AllocMatrix(short, short, short, short);
-void        FreeVector(double *, short, short);
-void        FreeMatrix(double **, short, short, short, short);
+float     *AllocVector(short, short);
+float    **AllocMatrix(short, short, short, short);
+void        FreeVector(float *, short, short);
+void        FreeMatrix(float **, short, short, short, short);
 void        nrerror(char *);
 
 /***********************************************************
  *	Other prototypes.
  ****/
 void 
-IsoPlot(double **Z,		/* the 2D array Z[i][j]. */
+IsoPlot(float **Z,		/* the 2D array Z[i][j]. */
 	long int IXmax,
 	long int IYmax,		/* the 0<=i<=IXmax, 0<=j<=IYmax. */
-	double Dx,
-	double Dy);		/* the gridline separations. */
+	float Dx,
+	float Dy);		/* the gridline separations. */
 short       GetShort(short, short);
 float       GetFloat(float, float);

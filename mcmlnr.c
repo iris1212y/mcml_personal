@@ -29,12 +29,12 @@ void nrerror(char error_text[])
  *	don't initialize the elements to zero. This will
  *	be accomplished by the following functions. 
  ****/
-double *AllocVector(short nl, short nh)
+float *AllocVector(short nl, short nh)
 {
-  double *v;
+  float *v;
   short i;
   
-  v=(double *)malloc((unsigned) (nh-nl+1)*sizeof(double));
+  v=(float *)malloc((unsigned) (nh-nl+1)*sizeof(float));
   if (!v) nrerror("allocation failure in vector()");
   
   v -= nl;
@@ -47,20 +47,20 @@ double *AllocVector(short nl, short nh)
  *	inclusive, and column index from ncl to nch
  *	inclusive.
  ****/
-double **AllocMatrix(short nrl,short nrh,
+float **AllocMatrix(short nrl,short nrh,
 					 short ncl,short nch)
 {
   short i,j;
-  double **m;
+  float **m;
   
-  m=(double **) malloc((unsigned) (nrh-nrl+1)
-						*sizeof(double*));
+  m=(float **) malloc((unsigned) (nrh-nrl+1)
+						*sizeof(float*));
   if (!m) nrerror("allocation failure 1 in matrix()");
   m -= nrl;
   
   for(i=nrl;i<=nrh;i++) {
-    m[i]=(double *) malloc((unsigned) (nch-ncl+1)
-						*sizeof(double));
+    m[i]=(float *) malloc((unsigned) (nch-ncl+1)
+						*sizeof(float));
     if (!m[i]) nrerror("allocation failure 2 in matrix()");
     m[i] -= ncl;
   }
@@ -73,7 +73,7 @@ double **AllocMatrix(short nrl,short nrh,
 /***********************************************************
  *	Release the memory.
  ****/
-void FreeVector(double *v,short nl,short nh)
+void FreeVector(float *v,short nl,short nh)
 {
   free((char*) (v+nl));
 }
@@ -81,7 +81,7 @@ void FreeVector(double *v,short nl,short nh)
 /***********************************************************
  *	Release the memory.
  ****/
-void FreeMatrix(double **m,short nrl,short nrh,
+void FreeMatrix(float **m,short nrl,short nrh,
 			    short ncl,short nch)
 {
   short i;

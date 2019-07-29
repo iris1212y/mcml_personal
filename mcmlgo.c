@@ -79,7 +79,7 @@ float ran3(int *idum)
  *	We found that when idum is too large, ran3 may return 
  *	numbers beyond 0 and 1.
  ****/
-double RandomNum(void)
+float RandomNum(void)
 {
   static Boolean first_time=1;
   static int idum;	/* seed for ran3. */
@@ -96,7 +96,7 @@ double RandomNum(void)
     idum = 1;
   }
   
-  return( (double)ran3(&idum) );
+  return( (float)ran3(&idum) );
 }
 
 /***********************************************************
@@ -113,11 +113,11 @@ double RandomNum(void)
  *	The subroutine assumes the Layerspecs array is correctly 
  *	initialized.
  ****/
-double Rspecular(LayerStruct * Layerspecs_Ptr)
+float Rspecular(LayerStruct * Layerspecs_Ptr)
 {
-  double r1, r2;
+  float r1, r2;
 	/* direct reflections from the 1st and 2nd layers. */
-  double temp;
+  float temp;
   
   temp =(Layerspecs_Ptr[0].n - Layerspecs_Ptr[1].n)
 	   /(Layerspecs_Ptr[0].n + Layerspecs_Ptr[1].n);
@@ -137,7 +137,7 @@ double Rspecular(LayerStruct * Layerspecs_Ptr)
 /***********************************************************
  *	Initialize a photon packet.
  ****/
-void LaunchPhoton(double Rspecular,
+void LaunchPhoton(float Rspecular,
 				  LayerStruct  * Layerspecs_Ptr,
 				  PhotonStruct * Photon_Ptr)
 {
@@ -172,14 +172,14 @@ void LaunchPhoton(double Rspecular,
  *
  *	Returns the cosine of the polar deflection angle theta.
  ****/
-double SpinTheta(double g)
+float SpinTheta(float g)
 {
-  double cost;
+  float cost;
   
   if(g == 0.0) 
     cost = 2*RandomNum() -1;
   else {
-    double temp = (1-g*g)/(1-g+2*g*RandomNum());
+    float temp = (1-g*g)/(1-g+2*g*RandomNum());
     cost = (1+g*g - temp*temp)/(2*g);
 	if(cost < -1) cost = -1;
 	else if(cost > 1) cost = 1;
@@ -201,17 +201,17 @@ double SpinTheta(double g)
  *  	for 0-pi  sin(psi) is + 
  *  	for pi-2pi sin(psi) is - 
  ****/
-void Spin(double g,
+void Spin(float g,
 		  PhotonStruct * Photon_Ptr)
 {
-  double cost, sint;	/* cosine and sine of the */
+  float cost, sint;	/* cosine and sine of the */
 						/* polar deflection angle theta. */
-  double cosp, sinp;	/* cosine and sine of the */
+  float cosp, sinp;	/* cosine and sine of the */
 						/* azimuthal angle psi. */
-  double ux = Photon_Ptr->ux;
-  double uy = Photon_Ptr->uy;
-  double uz = Photon_Ptr->uz;
-  double psi;
+  float ux = Photon_Ptr->ux;
+  float uy = Photon_Ptr->uy;
+  float uz = Photon_Ptr->uz;
+  float psi;
 
   cost = SpinTheta(g);
   sint = sqrt(1.0 - cost*cost);	
@@ -232,7 +232,7 @@ void Spin(double g,
 	  /* SIGN() is faster than division. */
   }
   else  {		/* regular incident. */
-    double temp = sqrt(1.0 - uz*uz);
+    float temp = sqrt(1.0 - uz*uz);
     Photon_Ptr->ux = sint*(ux*uz*cosp - uy*sinp)
 					/temp + ux*cost;
     Photon_Ptr->uy = sint*(uy*uz*cosp + ux*sinp)
@@ -246,7 +246,7 @@ void Spin(double g,
  ****/
 void Hop(PhotonStruct *	Photon_Ptr)
 {
-  double s = Photon_Ptr->s;
+  float s = Photon_Ptr->s;
 
   Photon_Ptr->x += s*Photon_Ptr->ux;
   Photon_Ptr->y += s*Photon_Ptr->uy;
@@ -265,9 +265,9 @@ void Hop(PhotonStruct *	Photon_Ptr)
 void StepSizeInGlass(PhotonStruct *  Photon_Ptr,
 					 InputStruct  *  In_Ptr)
 {
-  double dl_b;	/* step size to boundary. */
+  float dl_b;	/* step size to boundary. */
   short  layer = Photon_Ptr->layer;
-  double uz = Photon_Ptr->uz;
+  float uz = Photon_Ptr->uz;
   
   /* Stepsize to the boundary. */	
   if(uz>0.0)
@@ -296,11 +296,11 @@ void StepSizeInTissue(PhotonStruct * Photon_Ptr,
 					  InputStruct  * In_Ptr)
 {
   short  layer = Photon_Ptr->layer;
-  double mua = In_Ptr->layerspecs[layer].mua;
-  double mus = In_Ptr->layerspecs[layer].mus;
+  float mua = In_Ptr->layerspecs[layer].mua;
+  float mus = In_Ptr->layerspecs[layer].mus;
   
   if(Photon_Ptr->sleft == 0.0) {  /* make a new step. */
-    double rnd;
+    float rnd;
 
     do rnd = RandomNum(); 
       while( rnd <= 0.0 );    /* avoid zero. */
@@ -323,9 +323,9 @@ void StepSizeInTissue(PhotonStruct * Photon_Ptr,
 Boolean HitBoundary(PhotonStruct *  Photon_Ptr,
 					InputStruct  *  In_Ptr)
 {
-  double dl_b;  /* length to boundary. */
+  float dl_b;  /* length to boundary. */
   short  layer = Photon_Ptr->layer;
-  double uz = Photon_Ptr->uz;
+  float uz = Photon_Ptr->uz;
   Boolean hit;
   
   /* Distance to the boundary. */
@@ -338,7 +338,7 @@ Boolean HitBoundary(PhotonStruct *  Photon_Ptr,
   
   if(uz != 0.0 && Photon_Ptr->s > dl_b) {
 	  /* not horizontal & crossing. */
-    double mut = In_Ptr->layerspecs[layer].mua 
+    float mut = In_Ptr->layerspecs[layer].mua 
 				+ In_Ptr->layerspecs[layer].mus;
 
     Photon_Ptr->sleft = (Photon_Ptr->s - dl_b)*mut;
@@ -365,12 +365,12 @@ void Drop(InputStruct  *	In_Ptr,
 		  PhotonStruct *	Photon_Ptr,
 		  OutStruct *		Out_Ptr)
 {
-  double dwa;		/* absorbed weight.*/
-  double x = Photon_Ptr->x;
-  double y = Photon_Ptr->y;
+  float dwa;		/* absorbed weight.*/
+  float x = Photon_Ptr->x;
+  float y = Photon_Ptr->y;
   short  iz, ir;	/* index to z & r. */
   short  layer = Photon_Ptr->layer;
-  double mua, mus;		
+  float mua, mus;		
   
   /* compute array indices. */
   iz = (short)(Photon_Ptr->z/In_Ptr->dz);
@@ -413,15 +413,15 @@ void Roulette(PhotonStruct * Photon_Ptr)
  * 	Avoid trigonometric function operations as much as
  *	possible, because they are computation-intensive.
  ****/
-double RFresnel(double n1,	/* incident refractive index.*/
-				double n2,	/* transmit refractive index.*/
-				double ca1,	/* cosine of the incident */
+float RFresnel(float n1,	/* incident refractive index.*/
+				float n2,	/* transmit refractive index.*/
+				float ca1,	/* cosine of the incident */
 							/* angle. 0<a1<90 degrees. */
-				double * ca2_Ptr)  /* pointer to the */
+				float * ca2_Ptr)  /* pointer to the */
 							/* cosine of the transmission */
 							/* angle. a2>0. */
 {
-  double r;
+  float r;
   
   if(n1==n2) {			  	/** matched boundary. **/
     *ca2_Ptr = ca1;
@@ -437,23 +437,23 @@ double RFresnel(double n1,	/* incident refractive index.*/
     r = 1.0;
   }
   else  {			  		/** general. **/
-    double sa1, sa2;	
+    float sa1, sa2;	
 	  /* sine of the incident and transmission angles. */
-    double ca2;
+    float ca2;
     
     sa1 = sqrt(1-ca1*ca1);
     sa2 = n1*sa1/n2;
     if(sa2>=1.0) {	
-	  /* double check for total internal reflection. */
+	  /* float check for total internal reflection. */
       *ca2_Ptr = 0.0;
       r = 1.0;
     }
     else  {
-      double cap, cam;	/* cosines of the sum ap or */
+      float cap, cam;	/* cosines of the sum ap or */
 						/* difference am of the two */
 						/* angles. ap = a1+a2 */
 						/* am = a1 - a2. */
-      double sap, sam;	/* sines. */
+      float sap, sam;	/* sines. */
       
       *ca2_Ptr = ca2 = sqrt(1-sa2*sa2);
       
@@ -475,13 +475,13 @@ double RFresnel(double n1,	/* incident refractive index.*/
  *
  *	Update the photon weight as well.
  ****/
-void RecordR(double			Refl,	/* reflectance. */
+void RecordR(float			Refl,	/* reflectance. */
 			 InputStruct  *	In_Ptr,
 			 PhotonStruct *	Photon_Ptr,
 			 OutStruct *	Out_Ptr)
 {
-  double x = Photon_Ptr->x;
-  double y = Photon_Ptr->y;
+  float x = Photon_Ptr->x;
+  float y = Photon_Ptr->y;
   short  ir, ia;	/* index to r & angle. */
   
   ir = (short)(sqrt(x*x+y*y)/In_Ptr->dr);
@@ -503,13 +503,13 @@ void RecordR(double			Refl,	/* reflectance. */
  *
  *	Update the photon weight as well.
  ****/
-void RecordT(double 		Refl,
+void RecordT(float 		Refl,
 			 InputStruct  *	In_Ptr,
 			 PhotonStruct *	Photon_Ptr,
 			 OutStruct *	Out_Ptr)
 {
-  double x = Photon_Ptr->x;
-  double y = Photon_Ptr->y;
+  float x = Photon_Ptr->x;
+  float y = Photon_Ptr->y;
   short  ir, ia;	/* index to r & angle. */
   
   ir = (short)(sqrt(x*x+y*y)/In_Ptr->dr);
@@ -547,13 +547,13 @@ void CrossUpOrNot(InputStruct  *	In_Ptr,
 				  PhotonStruct *	Photon_Ptr,
 				  OutStruct *		Out_Ptr)
 {
-  double uz = Photon_Ptr->uz; /* z directional cosine. */
-  double uz1;	/* cosines of transmission alpha. always */
+  float uz = Photon_Ptr->uz; /* z directional cosine. */
+  float uz1;	/* cosines of transmission alpha. always */
 				/* positive. */
-  double r=0.0;	/* reflectance */
+  float r=0.0;	/* reflectance */
   short  layer = Photon_Ptr->layer;
-  double ni = In_Ptr->layerspecs[layer].n;
-  double nt = In_Ptr->layerspecs[layer-1].n;
+  float ni = In_Ptr->layerspecs[layer].n;
+  float nt = In_Ptr->layerspecs[layer-1].n;
   
   /* Get r. */
   if( - uz <= In_Ptr->layerspecs[layer].cos_crit0) 
@@ -609,12 +609,12 @@ void CrossDnOrNot(InputStruct  *	In_Ptr,
 				  PhotonStruct *	Photon_Ptr,
 				  OutStruct *		Out_Ptr)
 {
-  double uz = Photon_Ptr->uz; /* z directional cosine. */
-  double uz1;	/* cosines of transmission alpha. */
-  double r=0.0;	/* reflectance */
+  float uz = Photon_Ptr->uz; /* z directional cosine. */
+  float uz1;	/* cosines of transmission alpha. */
+  float r=0.0;	/* reflectance */
   short  layer = Photon_Ptr->layer;
-  double ni = In_Ptr->layerspecs[layer].n;
-  double nt = In_Ptr->layerspecs[layer+1].n;
+  float ni = In_Ptr->layerspecs[layer].n;
+  float nt = In_Ptr->layerspecs[layer+1].n;
   
   /* Get r. */
   if( uz <= In_Ptr->layerspecs[layer].cos_crit1) 
@@ -675,7 +675,7 @@ void HopInGlass(InputStruct  * In_Ptr,
 				PhotonStruct * Photon_Ptr,
 				OutStruct    * Out_Ptr)
 {
-  double dl;     /* step size. 1/cm */
+  float dl;     /* step size. 1/cm */
   
   if(Photon_Ptr->uz == 0.0) { 
 	/* horizontal photon in glass is killed. */

@@ -30,13 +30,13 @@ nrerror(char error_text[])
  *	don't initialize the elements to zero. This will
  *	be accomplished by the following functions.
  ****/
-double     *
+float     *
 AllocVector(short nl, short nh)
 {
-  double     *v;
+  float     *v;
   short       i;
 
-  v = (double *) malloc((unsigned) (nh - nl + 1) * sizeof(double));
+  v = (float *) malloc((unsigned) (nh - nl + 1) * sizeof(float));
   if (!v)
     nrerror("allocation failure in vector()");
 
@@ -50,22 +50,22 @@ AllocVector(short nl, short nh)
  *	inclusive, and column index from ncl to nch
  *	inclusive.
  ****/
-double    **
+float    **
 AllocMatrix(short nrl, short nrh,
 	    short ncl, short nch)
 {
   short       i, j;
-  double    **m;
+  float    **m;
 
-  m = (double **) malloc((unsigned) (nrh - nrl + 1)
-			 * sizeof(double *));
+  m = (float **) malloc((unsigned) (nrh - nrl + 1)
+			 * sizeof(float *));
   if (!m)
     nrerror("allocation failure 1 in matrix()");
   m -= nrl;
 
   for (i = nrl; i <= nrh; i++) {
-    m[i] = (double *) malloc((unsigned) (nch - ncl + 1)
-			     * sizeof(double));
+    m[i] = (float *) malloc((unsigned) (nch - ncl + 1)
+			     * sizeof(float));
     if (!m[i])
       nrerror("allocation failure 2 in matrix()");
     m[i] -= ncl;
@@ -81,7 +81,7 @@ AllocMatrix(short nrl, short nrh,
  *	Release the memory.
  ****/
 void
-FreeVector(double *v, short nl, short nh)
+FreeVector(float *v, short nl, short nh)
 {
   free((char *) (v + nl));
 }
@@ -90,7 +90,7 @@ FreeVector(double *v, short nl, short nh)
  *	Release the memory.
  ****/
 void
-FreeMatrix(double **m, short nrl, short nrh,
+FreeMatrix(float **m, short nrl, short nrh,
 	   short ncl, short nch)
 {
   short       i;
@@ -164,11 +164,11 @@ qtrap(
  *	We modified from the original bessi0(). Instead of
  *	I0(x) itself, it returns I0(x) exp(-x).
  ****/
-double
-BessI0(double x)
+float
+BessI0(float x)
 {
-  double      ax, ans;
-  double      y;
+  float      ax, ans;
+  float      y;
 
   if ((ax = fabs(x)) < 3.75) {
     y = x / 3.75;
